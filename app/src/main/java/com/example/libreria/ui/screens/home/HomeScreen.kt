@@ -1,6 +1,7 @@
 package com.example.libreria.ui.screens.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,6 +40,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.libreria.R
@@ -48,7 +50,10 @@ import com.example.libreria.model.Item
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    libreriaUiState: LibreriaUiState, modifier: Modifier = Modifier, contentPadding: PaddingValues
+    navController: NavController,
+    libreriaUiState: LibreriaUiState,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues
 ) {
     var searchQuery by remember { mutableStateOf("") }
     val libreriaViewModel: HomeScreemViewModel = viewModel(factory = HomeScreemViewModel.Factory)
@@ -67,7 +72,8 @@ fun HomeScreen(
                 is LibreriaUiState.Success -> Resultados(
                     libros = libreriaUiState.libros,
                     modifier = modifier,
-                    contentPadding = contentPadding
+                    contentPadding = contentPadding,
+                    navController = navController
                 )
 
                 else -> ErrorScreen({}, modifier)
@@ -103,22 +109,31 @@ fun ErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun Resultados(libros: BooksResponse, modifier: Modifier, contentPadding: PaddingValues) {
+fun Resultados(
+    libros: BooksResponse,
+    modifier: Modifier,
+    contentPadding: PaddingValues,
+    navController: NavController
+) {
     println(libros.items.size)
     Box(modifier = modifier) {
         LazyColumn(
             modifier = modifier.padding(25.dp), verticalArrangement = Arrangement.spacedBy(25.dp)
         ) {
             items(items = libros.items, key = { libro -> libro.id!! }) {
-                ResultadoCard(it, Modifier.fillMaxSize())
+                ResultadoCard(it,
+                    Modifier.fillMaxSize(),
+                    onClick = { navController.navigate("BookScreen/${it.id}") })
             }
         }
     }
 }
 
 @Composable
-fun ResultadoCard(libro: Item, modifier: Modifier = Modifier) {
-    Card(modifier = modifier, shape = RoundedCornerShape(8.dp)) {
+fun ResultadoCard(
+    libro: Item, modifier: Modifier = Modifier, onClick: () -> Unit
+) {
+    Card(modifier = modifier.clickable(onClick = onClick), shape = RoundedCornerShape(8.dp)) {
         Row {
             AsyncImage(
                 modifier = modifier.weight(1f),

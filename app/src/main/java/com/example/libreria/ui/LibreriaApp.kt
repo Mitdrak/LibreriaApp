@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import com.example.libreria.navigation.LibreriaNavigation
 import com.example.libreria.ui.screens.home.HomeScreemViewModel
 import com.example.libreria.ui.screens.home.HomeScreen
 import com.example.libreria.ui.theme.Orange40
@@ -23,6 +25,7 @@ import com.example.libreria.ui.theme.Orange40
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LibreriaApp() {
+    val navController = rememberNavController()
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         CenterAlignedTopAppBar(
             title = {
@@ -35,13 +38,7 @@ fun LibreriaApp() {
         )
     }) {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            val libreriaViewModel: HomeScreemViewModel =
-                viewModel(factory = HomeScreemViewModel.Factory)
-            HomeScreen(
-                libreriaUiState = libreriaViewModel.libreriaUiState,
-                contentPadding = it,
-                modifier = Modifier.fillMaxSize()
-            )
+            LibreriaNavigation(it)
         }
     }
 }
