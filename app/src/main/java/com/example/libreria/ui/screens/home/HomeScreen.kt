@@ -55,6 +55,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues
 ) {
+    println("MI NAV CONTROLLER ES ${navController.currentDestination}")
+    println("MI NAV CONTROLLER ES ${navController.previousBackStackEntry}")
     var searchQuery by remember { mutableStateOf("") }
     val libreriaViewModel: HomeScreemViewModel = viewModel(factory = HomeScreemViewModel.Factory)
 

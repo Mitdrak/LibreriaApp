@@ -5,15 +5,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.libreria.ui.screens.home.HomeScreemViewModel
 import com.example.libreria.ui.screens.home.HomeScreen
+import com.example.libreria.ui.screens.libro.BookDetailScreen
 
 @Composable
-fun LibreriaNavigation(contentPaddingValues: PaddingValues) {
-    val navController = rememberNavController()
+fun LibreriaNavigation(contentPaddingValues: PaddingValues, navController: NavHostController) {
     val libreriaViewModel: HomeScreemViewModel = viewModel(factory = HomeScreemViewModel.Factory)
 
     NavHost(navController = navController, startDestination = LibreriaScreens.HomeScreen.name) {
@@ -27,6 +27,12 @@ fun LibreriaNavigation(contentPaddingValues: PaddingValues) {
         }
         composable("BookScreen/{bookId}") { backStackEntry ->
             val bookId = backStackEntry.arguments?.getString("bookId")
+            BookDetailScreen(
+                navController = navController,
+                bookId = bookId ?: "2",
+                contentPaddingValues = contentPaddingValues,
+                modifier = Modifier.fillMaxSize()
+            )
         }
 
     }
