@@ -70,6 +70,7 @@ dependencies {
 
 
     implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation(libs.androidx.runtime.livedata)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
