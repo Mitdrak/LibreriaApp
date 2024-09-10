@@ -1,9 +1,7 @@
 package com.example.libreria.ui.screens.home
 
-import android.content.Context
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -20,29 +18,42 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 
 sealed interface LibreriaUiState {
+    /*data class Success(val libros: BooksResponse) : LibreriaUiState*/
     data class Success(val libros: BooksResponse) : LibreriaUiState
     object Error : LibreriaUiState
     object Loading : LibreriaUiState
 }
 
 class HomeScreemViewModel(private val libreriaRepository: LibreriaRepository) : ViewModel() {
-    var libreriaUiState: LibreriaUiState by mutableStateOf(LibreriaUiState.Loading)
-        private set
+
+    private val _libreriaUiState = MutableStateFlow<LibreriaUiState>(LibreriaUiState.Loading)
+    val libreriaUiState: StateFlow<LibreriaUiState> = _libreriaUiState.asStateFlow()
+//    private val _libreriaUiState = MutableStateFlow<LibreriaUiState>(LibreriaUiState.Loading)
+//
+//    var libreriaUiState: LibreriaUiState by mutableStateOf(LibreriaUiState.Loading)
+//        private set
+    val _libros = MutableLiveData<BooksResponse>()
+    val libros: LiveData<BooksResponse> = _libros
 
     init {
-        getLibros("Dune")
+        getLibros("Brandon Sanderson")
     }
 
     fun getLibros(query: String) {
+        println("Se imprime lo que se ve a buscar $query")
         viewModelScope.launch {
-            libreriaUiState = LibreriaUiState.Loading
-            libreriaUiState = try {
-                LibreriaUiState.Success(libreriaRepository.getLibrosReponse(query))
+            _libreriaUiState.value = LibreriaUiState.Loading
+            _libreriaUiState.value = try {
+                val result = libreriaRepository.getLibrosReponse(query)
+                _libros.value = result
+                println("Se imprime el resultado $result")
+                /*LibreriaUiState.Success(libreriaRepository.getLibrosReponse(query))*/
+                LibreriaUiState.Success(libros = result)
             } catch (e: IOException) {
-                println("Error $e")
+                println("Error IOException $e")
                 LibreriaUiState.Error
             } catch (e: Exception) {
-                println("Error $e")
+                println("Error Exception $e")
                 LibreriaUiState.Error
             }
         }

@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -59,25 +60,35 @@ fun HomeScreen(
     println("MI NAV CONTROLLER ES ${navController.previousBackStackEntry}")
     var searchQuery by remember { mutableStateOf("") }
     val libreriaViewModel: HomeScreemViewModel = viewModel(factory = HomeScreemViewModel.Factory)
+    val itemsBusqueda by libreriaViewModel.libros.observeAsState()
+
+
 
     Box(modifier = modifier.padding(top = contentPadding.calculateTopPadding().minus(20.dp))) {
         Column(horizontalAlignment = CenterHorizontally) {
             SearchBar(query = searchQuery,
                 onQueryChange = { newQuery -> searchQuery = newQuery },
-                onSearch = { libreriaViewModel.getLibros(searchQuery) },
+                onSearch = {
+                    libreriaViewModel.getLibros(searchQuery)
+                    println("MI QUERY ES $searchQuery")
+                },
                 active = false,
                 onActiveChange = {}) {
                 Text(text = "Buscar")
             }
             when (libreriaUiState) {
                 is LibreriaUiState.Loading -> LoadingScreen(modifier.size(200.dp))
-                is LibreriaUiState.Success -> Resultados(
-                    libros = libreriaUiState.libros,
-                    modifier = modifier,
-                    contentPadding = contentPadding,
-                    navController = navController
-                )
-
+                is LibreriaUiState.Success -> {
+                    println(libreriaUiState.libros)
+                    itemsBusqueda?.let {
+                        Resultados(
+                            libros = it,
+                            modifier = modifier,
+                            contentPadding = contentPadding,
+                            navController = navController
+                        )
+                    }
+                }
                 else -> ErrorScreen({}, modifier)
             }
         }

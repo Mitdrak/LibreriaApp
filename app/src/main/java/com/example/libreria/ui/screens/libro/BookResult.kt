@@ -28,7 +28,7 @@ fun BookDetailScreen(
 
     ) {
         Text(
-            text = "Book Detail Screen",
+            text = "Book Detail Screen $bookId.",
             modifier = Modifier.padding(16.dp),
             style = MaterialTheme.typography.bodyLarge
         )
