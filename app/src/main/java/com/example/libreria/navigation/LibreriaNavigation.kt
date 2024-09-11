@@ -17,13 +17,12 @@ import com.example.libreria.ui.screens.libro.BookDetailScreen
 @Composable
 fun LibreriaNavigation(contentPaddingValues: PaddingValues, navController: NavHostController) {
     val libreriaViewModel: HomeScreemViewModel = viewModel(factory = HomeScreemViewModel.Factory)
-    val libreriaUiState by libreriaViewModel.libreriaUiState.collectAsState()
 
     NavHost(navController = navController, startDestination = LibreriaScreens.HomeScreen.name) {
         composable(LibreriaScreens.HomeScreen.name) {
             HomeScreen(
                 navController = navController,
-                libreriaUiState = libreriaUiState,
+                libreriaViewModel = libreriaViewModel,
                 contentPadding = contentPaddingValues,
                 modifier = Modifier.fillMaxSize()
             )

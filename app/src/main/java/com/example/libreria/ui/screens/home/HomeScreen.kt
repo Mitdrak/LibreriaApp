@@ -52,16 +52,15 @@ import com.example.libreria.model.Item
 @Composable
 fun HomeScreen(
     navController: NavController,
-    libreriaUiState: LibreriaUiState,
+    libreriaViewModel: HomeScreemViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues
 ) {
     println("MI NAV CONTROLLER ES ${navController.currentDestination}")
     println("MI NAV CONTROLLER ES ${navController.previousBackStackEntry}")
     var searchQuery by remember { mutableStateOf("") }
-    val libreriaViewModel: HomeScreemViewModel = viewModel(factory = HomeScreemViewModel.Factory)
     val itemsBusqueda by libreriaViewModel.libros.observeAsState()
-
+    val libreriaUiState by libreriaViewModel.libreriaUiState.collectAsState()
 
 
     Box(modifier = modifier.padding(top = contentPadding.calculateTopPadding().minus(20.dp))) {
@@ -79,7 +78,7 @@ fun HomeScreen(
             when (libreriaUiState) {
                 is LibreriaUiState.Loading -> LoadingScreen(modifier.size(200.dp))
                 is LibreriaUiState.Success -> {
-                    println(libreriaUiState.libros)
+                    println((libreriaUiState as LibreriaUiState.Success).libros)
                     itemsBusqueda?.let {
                         Resultados(
                             libros = it,

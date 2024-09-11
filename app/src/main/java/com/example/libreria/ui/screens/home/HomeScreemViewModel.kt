@@ -37,6 +37,7 @@ class HomeScreemViewModel(private val libreriaRepository: LibreriaRepository) : 
 
     init {
         getLibros("Brandon Sanderson")
+        getBook("fQBiAwAAQBAJ")
     }
 
     fun getLibros(query: String) {
@@ -58,7 +59,18 @@ class HomeScreemViewModel(private val libreriaRepository: LibreriaRepository) : 
             }
         }
     }
-
+    fun getBook(id: String) {
+        viewModelScope.launch {
+            try {
+                val result = libreriaRepository.getBook(id)
+                println("Se imprime el resultado del libro $id : $result")
+            } catch (e: IOException) {
+                println("Error IOException $e")
+            } catch (e: Exception) {
+                println("Error Exception $e")
+            }
+        }
+    }
 
     companion object {
         // Factory to create instances of AmphibiansViewModel

@@ -67,6 +67,8 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:${rootProject.extra["retrofit2_version"]}")
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation("com.squareup.okhttp3:logging-interceptor:3.8.0")
+
 
 
     implementation("androidx.navigation:navigation-compose:2.5.3")
