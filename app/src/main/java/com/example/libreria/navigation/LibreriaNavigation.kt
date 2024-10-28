@@ -31,6 +31,7 @@ fun LibreriaNavigation(contentPaddingValues: PaddingValues, navController: NavHo
             val bookId = backStackEntry.arguments?.getString("bookId")
             BookDetailScreen(
                 navController = navController,
+                libreriaViewModel = libreriaViewModel,
                 bookId = bookId ?: "2",
                 contentPaddingValues = contentPaddingValues,
                 modifier = Modifier.fillMaxSize()

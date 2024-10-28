@@ -37,7 +37,6 @@ class HomeScreemViewModel(private val libreriaRepository: LibreriaRepository) : 
 
     init {
         getLibros("Brandon Sanderson")
-        getBook("fQBiAwAAQBAJ")
     }
 
     fun getLibros(query: String) {
